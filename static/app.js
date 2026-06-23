@@ -9,6 +9,15 @@ let captchaToken = null  // 当前验证码 token
 // ─── 初始化 ──────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // 首次访问弹窗
+  if (!localStorage.getItem('disclaimer_dismissed')) {
+    document.getElementById('disclaimer-overlay').classList.remove('hidden')
+    document.getElementById('disclaimer-ok').addEventListener('click', () => {
+      localStorage.setItem('disclaimer_dismissed', '1')
+      document.getElementById('disclaimer-overlay').classList.add('hidden')
+    })
+  }
+
   try {
     const imgResp = await fetch('/static/card_images.json')
     cardImages = await imgResp.json()
@@ -143,7 +152,7 @@ function renderCards(cards) {
   })
 }
 
-// ─── 开始占卜（流式） ─────────────────────────────────────
+// ─── 开始解读（流式） ─────────────────────────────────────
 
 async function startReading() {
   const question = document.getElementById('question-input').value.trim()
@@ -158,7 +167,7 @@ async function startReading() {
 
   const btn = document.getElementById('draw-btn')
   btn.disabled = true
-  btn.textContent = '占卜中'
+  btn.textContent = '解读中'
 
   // 切换到结果页
   goStep(3)
@@ -193,7 +202,7 @@ async function startReading() {
         document.getElementById('typing-indicator').classList.add('hidden')
       }
       btn.disabled = false
-      btn.textContent = '开始占卜'
+      btn.textContent = '开始解读'
       return
     }
 
@@ -258,7 +267,7 @@ async function startReading() {
   }
 
   btn.disabled = false
-  btn.textContent = '开始占卜'
+  btn.textContent = '开始解读'
 }
 
 // ─── 重置 ────────────────────────────────────────────────

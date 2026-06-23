@@ -3,13 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>知我 · 塔罗占卜</title>
+  <title>知我 · 塔罗</title>
   <link rel="stylesheet" href="/static/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
+  <!-- ─── 免责弹窗 ─── -->
+  <div id="disclaimer-overlay" class="disclaimer-overlay hidden">
+    <div class="disclaimer-modal">
+      <div class="disclaimer-icon">⟡</div>
+      <h2>知我 · 塔罗</h2>
+      <p class="disclaimer-text">
+        本应用仅供娱乐参考，并非真正的占卜或预言。<br>
+        所有解读由 AI 生成，请理性看待，切勿迷信。
+      </p>
+      <button id="disclaimer-ok" class="btn btn-primary">我知道了</button>
+    </div>
+  </div>
 
   <!-- ─── 页头 ─── -->
   <header>
@@ -80,7 +93,7 @@
 
       <div class="actions">
         <button id="prev-btn-2" class="btn btn-ghost" onclick="goStep(1)">← 重新选牌</button>
-        <button id="draw-btn" class="btn btn-primary" onclick="startReading()">开始占卜</button>
+        <button id="draw-btn" class="btn btn-primary" onclick="startReading()">开始解读</button>
       </div>
     </section>
 
@@ -109,7 +122,7 @@
 
   <!-- ─── 页脚 ─── -->
   <footer>
-    <p>知我 · 塔罗占卜</p>
+    <p>知我 · 塔罗</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
