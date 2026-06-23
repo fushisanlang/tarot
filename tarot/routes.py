@@ -57,7 +57,7 @@ def _get_redis():
 def rate_limit(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        ip = request.remote_addr or "unknown"
+        ip = _get_client_ip()
         today_str = date.today().isoformat()
         redis_key = f"rate_limit:{ip}:{today_str}"
         r = _get_redis()
