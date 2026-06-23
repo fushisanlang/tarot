@@ -86,8 +86,6 @@ function selectSpread(id) {
 // ─── 验证码 ──────────────────────────────────────────────
 
 async function fetchCaptcha() {
-  const errEl = document.getElementById('captcha-error')
-  errEl.classList.add('hidden')
   captchaToken = null
   document.getElementById('captcha-problem').textContent = '加载中...'
   document.getElementById('captcha-input').value = ''
@@ -289,6 +287,14 @@ document.getElementById('question-input').addEventListener('input', function () 
   document.getElementById('char-count').textContent = this.value.length
 })
 
-// ─── 验证码刷新 ──────────────────────────────────────────
+// ─── 验证码 ──────────────────────────────────────────────
 
-document.getElementById('captcha-refresh').addEventListener('click', fetchCaptcha)
+// 用户重新输入时清除错误提示
+document.getElementById('captcha-input').addEventListener('input', function () {
+  document.getElementById('captcha-error').classList.add('hidden')
+})
+
+document.getElementById('captcha-refresh').addEventListener('click', function () {
+  document.getElementById('captcha-error').classList.add('hidden')
+  fetchCaptcha()
+})
