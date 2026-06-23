@@ -316,6 +316,7 @@ function resetAll() {
   const textEl = document.getElementById('reading-text')
   delete textEl.dataset.mdBuffer
   goStep(1)
+  fetchQuota()
 }
 
 // ─── 字数统计 ────────────────────────────────────────────
