@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>知我 · 塔罗占卜</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ─── 页头 ─── -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-glyph">⟡</span>
+        <h1>知我</h1>
+      </div>
+      <div class="header-meta">
+        <span class="meta-dot"></span>
+        <span class="meta-text">韦特塔罗 · 78 张</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── 主内容 ─── -->
+  <main>
+
+    <!-- ─── 步骤指示器 ─── -->
+    <div class="steps-nav">
+      <div class="step-item active" data-step="1">
+        <span class="step-marker">01</span>
+        <span class="step-label">选牌阵</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" data-step="2">
+        <span class="step-marker">02</span>
+        <span class="step-label">提问题</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-item" data-step="3">
+        <span class="step-marker">03</span>
+        <span class="step-label">看解读</span>
+      </div>
+    </div>
+
+    <!-- ─── Step 1: 选牌阵 ─── -->
+    <section id="step1" class="step-section active">
+      <div class="section-head">
+        <h2>选择牌阵</h2>
+        <p class="section-sub">不同牌阵适合不同的问题</p>
+      </div>
+      <div id="spread-grid" class="spread-grid"></div>
+    </section>
+
+    <!-- ─── Step 2: 输入问题 ─── -->
+    <section id="step2" class="step-section">
+      <div class="section-head">
+        <h2>你的问题</h2>
+        <p class="section-sub">用心提问，牌面会更贴近你的真实处境</p>
+      </div>
+      <div class="question-area">
+        <textarea id="question-input" placeholder="例如：我最近的事业发展会如何？" maxlength="200" rows="3"></textarea>
+        <div class="textarea-footer">
+          <span class="char-counter"><span id="char-count">0</span> / 200</span>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="prev-btn-2" class="btn btn-ghost" onclick="goStep(1)">← 重新选牌</button>
+        <button id="draw-btn" class="btn btn-primary" onclick="startReading()">开始占卜</button>
+      </div>
+    </section>
+
+    <!-- ─── Step 3: 解读展示 ─── -->
+    <section id="step3" class="step-section">
+      <div class="section-head">
+        <h2>牌面解读</h2>
+        <p id="reading-question" class="section-sub"></p>
+      </div>
+
+      <div id="card-grid" class="card-grid"></div>
+
+      <div id="ai-reading" class="reading-panel hidden">
+        <div id="reading-text" class="reading-text"></div>
+        <div id="typing-indicator" class="typing-indicator hidden">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="new-reading-btn" class="btn btn-primary" onclick="resetAll()">再来一次</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── 页脚 ─── -->
+  <footer>
+    <p>知我 · 塔罗占卜</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

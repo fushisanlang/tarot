@@ -1,0 +1,588 @@
+/* ─── 基础重置 & 变量 ─────────────────────────────────────── */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg:            #0c0a14;
+  --surface:       #14111f;
+  --surface-raised:#1b172b;
+  --border:        #26213a;
+  --border-hover:  #3f3560;
+
+  --accent:        #b8865b;
+  --accent-dim:    #8a6848;
+  --accent-glow:   rgba(184, 134, 91, 0.15);
+
+  --text:          #e4e0ec;
+  --text-dim:      #7b738f;
+  --text-muted:    #4e4860;
+
+  --radius-sm:    6px;
+  --radius:       10px;
+  --radius-lg:    14px;
+
+  --font-display: 'Noto Serif SC', 'Songti SC', serif;
+  --font-body:    'Noto Sans SC', -apple-system, 'PingFang SC', sans-serif;
+
+  --transition:   200ms ease;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  line-height: 1.65;
+}
+
+/* ─── 页头 ─────────────────────────────────────────────── */
+
+header {
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.header-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-glyph {
+  font-size: 18px;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.brand h1 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--text);
+}
+
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.meta-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* ─── 主容器 ────────────────────────────────────────────── */
+
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* ─── 步骤导航 ──────────────────────────────────────────── */
+
+.steps-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 48px;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 4px;
+  cursor: default;
+  opacity: 0.35;
+  transition: opacity var(--transition);
+}
+
+.step-item.active {
+  opacity: 1;
+}
+
+.step-marker {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+.step-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  display: none;
+}
+
+.step-item.active .step-label {
+  display: inline;
+}
+
+.step-connector {
+  width: 40px;
+  height: 1px;
+  background: var(--border);
+  margin: 0 8px;
+  flex-shrink: 0;
+}
+
+.step-item.active + .step-connector {
+  background: var(--accent-dim);
+}
+
+/* ─── 步骤区块 ──────────────────────────────────────────── */
+
+.step-section {
+  display: none;
+}
+
+.step-section.active {
+  display: block;
+  animation: fadeUp 350ms ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.section-head {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.section-head h2 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+}
+
+.section-sub {
+  font-size: 13px;
+  color: var(--text-dim);
+  max-width: 360px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ─── 牌阵网格 ──────────────────────────────────────────── */
+
+.spread-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.spread-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    background var(--transition),
+    transform var(--transition);
+  text-align: center;
+}
+
+.spread-card:hover {
+  border-color: var(--border-hover);
+  background: var(--surface-raised);
+  transform: translateY(-1px);
+}
+
+.spread-card.selected {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+
+.spread-card .card-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+  line-height: 1;
+  opacity: 0.7;
+}
+
+.spread-card.selected .card-icon {
+  opacity: 1;
+}
+
+.spread-card .name {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.spread-card .count {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.spread-card .desc {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* ─── 问题输入 ──────────────────────────────────────────── */
+
+.question-area {
+  max-width: 480px;
+  margin: 0 auto 4px;
+}
+
+#question-input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  resize: none;
+  transition: border-color var(--transition);
+}
+
+#question-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+#question-input::placeholder {
+  color: var(--text-muted);
+}
+
+.textarea-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 2px 0;
+}
+
+.char-counter {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-feature-settings: 'tnum';
+}
+
+/* ─── 按钮 ──────────────────────────────────────────────── */
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 28px;
+  border-radius: var(--radius);
+  border: none;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition),
+    transform 120ms ease;
+  letter-spacing: 0.5px;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #0c0a14;
+}
+
+.btn-primary:hover {
+  background: #c79564;
+}
+
+.btn-primary:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover {
+  border-color: var(--border-hover);
+  color: var(--text);
+}
+
+/* ─── 牌面展示（解读页） ─────────────────────────────────── */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.card-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px;
+  text-align: center;
+}
+
+.card-item.upright {
+  border-color: rgba(184, 134, 91, 0.2);
+}
+
+.card-item.reversed {
+  border-color: rgba(184, 134, 91, 0.1);
+}
+
+.card-img-wrapper {
+  width: 100%;
+  aspect-ratio: 296 / 500;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  background: var(--bg);
+}
+
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-img.reversed {
+  transform: rotate(180deg);
+}
+
+.card-position {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.card-name {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.card-meaning {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* ─── AI 解读面板 ────────────────────────────────────────── */
+
+.reading-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-top: 4px;
+}
+
+.reading-text {
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--text);
+}
+
+.reading-text h1,
+.reading-text h2,
+.reading-text h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin: 24px 0 10px;
+}
+
+.reading-text h1 { font-size: 18px; }
+.reading-text h2 { font-size: 16px; color: var(--accent); }
+.reading-text h3 { font-size: 15px; }
+
+.reading-text p {
+  margin: 10px 0;
+}
+
+.reading-text ul,
+.reading-text ol {
+  padding-left: 20px;
+  margin: 10px 0;
+}
+
+.reading-text li {
+  margin: 4px 0;
+}
+
+.reading-text blockquote {
+  border-left: 2px solid var(--accent);
+  padding: 8px 16px;
+  margin: 14px 0;
+  background: var(--accent-glow);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.reading-text strong {
+  color: var(--accent);
+}
+
+.reading-text hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 20px 0;
+}
+
+/* ─── 打字指示器 ────────────────────────────────────────── */
+
+.typing-indicator {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  padding: 16px 0 4px;
+}
+
+.typing-indicator span {
+  width: 7px;
+  height: 7px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes pulse {
+  0%, 80%, 100% { transform: scale(0.5); opacity: 0.3; }
+  40%           { transform: scale(1);   opacity: 1; }
+}
+
+/* ─── 页脚 ──────────────────────────────────────────────── */
+
+footer {
+  text-align: center;
+  padding: 32px 24px 40px;
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+  border-top: 1px solid var(--border);
+}
+
+/* ─── 响应式 ──────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .header-inner {
+    padding: 0 16px;
+  }
+
+  main {
+    padding: 28px 16px 60px;
+  }
+
+  .steps-nav {
+    margin-bottom: 32px;
+  }
+
+  .step-label {
+    display: none;
+  }
+
+  .step-item.active .step-label {
+    display: inline;
+  }
+
+  .step-connector {
+    width: 24px;
+  }
+
+  .section-head h2 {
+    font-size: 19px;
+  }
+
+  .spread-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .spread-card {
+    padding: 14px;
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .reading-panel {
+    padding: 20px;
+  }
+}
+
+/* ─── 工具类 ────────────────────────────────────────────── */
+
+.hidden {
+  display: none !important;
+}
