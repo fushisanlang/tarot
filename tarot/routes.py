@@ -128,6 +128,22 @@ def get_captcha():
         return jsonify({"token": "", "problem": ""})
     return jsonify({"token": token, "problem": problem})
 
+
+@api.route("/quota", methods=["GET"])
+def get_quota():
+    """返回当日剩余次数。"""
+    ip = _get_client_ip()
+    remaining = DAILY_LIMIT
+    try:
+        r = _get_redis()
+        key = f"rate_limit:{ip}:{date.today().isoformat()}"
+        cur = r.get(key)
+        if cur is not None:
+            remaining = max(0, DAILY_LIMIT - int(cur))
+    except redis_lib.RedisError:
+        pass
+    return jsonify({"remaining": remaining, "limit": DAILY_LIMIT})
+
 # ── 路由：获取所有牌阵 ────────────────────────────────────────
 @api.route("/spreads", methods=["GET"])
 def get_spreads():

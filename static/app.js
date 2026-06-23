@@ -36,6 +36,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (e) {
     console.error('加载牌阵失败:', e)
   }
+
+  // 加载当日剩余次数
+  fetchQuota()
 })
 
 // ─── 步骤切换 ────────────────────────────────────────────
@@ -84,6 +87,18 @@ function selectSpread(id) {
 }
 
 // ─── 验证码 ──────────────────────────────────────────────
+
+async function fetchQuota() {
+  try {
+    const resp = await fetch('/api/quota')
+    const data = await resp.json()
+    const badge = document.getElementById('quota-badge')
+    badge.textContent = `今日剩余 ${data.remaining} 次`
+    badge.classList.remove('hidden')
+  } catch (_) {
+    // 静默失败
+  }
+}
 
 async function fetchCaptcha() {
   captchaToken = null
