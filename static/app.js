@@ -220,6 +220,7 @@ async function startReading() {
     let buffer = ''
     let cardsRendered = false
     let textStarted = false
+    let readingDone = false
     const textEl = document.getElementById('reading-text')
     const indicator = document.getElementById('typing-indicator')
 
@@ -263,6 +264,7 @@ async function startReading() {
             if (textEl.dataset.mdBuffer) {
               textEl.innerHTML = marked.parse(textEl.dataset.mdBuffer)
             }
+            readingDone = true
           }
 
           // 当日剩余次数
@@ -277,8 +279,11 @@ async function startReading() {
       }
     }
   } catch (e) {
-    document.getElementById('reading-text').textContent = '网络错误，请检查连接后重试'
-    document.getElementById('ai-reading').classList.remove('hidden')
+    // 流未完成才显示网络错误（已完成时忽略连接关闭）
+    if (!readingDone) {
+      document.getElementById('reading-text').textContent = '网络错误，请检查连接后重试'
+      document.getElementById('ai-reading').classList.remove('hidden')
+    }
   }
 
   btn.disabled = false
