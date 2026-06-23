@@ -163,17 +163,18 @@ async function startReading() {
     return
   }
 
+  // 本地验证：验证码必须填写
+  const captchaAnswer = document.getElementById('captcha-input').value.trim()
+  if (captchaToken && captchaToken !== '__skip__' && !captchaAnswer) {
+    document.getElementById('captcha-error').textContent = '请完成验证'
+    document.getElementById('captcha-error').classList.remove('hidden')
+    document.getElementById('captcha-input').focus()
+    return
+  }
+
   const btn = document.getElementById('draw-btn')
   btn.disabled = true
   btn.textContent = '解读中'
-
-  // 切换到结果页
-  goStep(3)
-  document.getElementById('reading-question').textContent = `「${question}」`
-  document.getElementById('card-grid').innerHTML = ''
-  document.getElementById('reading-text').innerHTML = ''
-  document.getElementById('ai-reading').classList.add('hidden')
-  document.getElementById('typing-indicator').classList.remove('hidden')
 
   try {
     const resp = await fetch('/api/reading', {
@@ -183,13 +184,13 @@ async function startReading() {
         spread_id: selectedSpread,
         question,
         captcha_token: captchaToken || '',
-        captcha_answer: document.getElementById('captcha-input').value.trim()
+        captcha_answer: captchaAnswer,
       }),
     })
 
+    // 验证码错误 → 留在 step2 显示错误，不跳转
     if (!resp.ok) {
       const err = await resp.json().catch(() => ({ error: '请求失败' }))
-      // 验证码错误 → 显示在验证码区域并刷新
       if (err.error && err.error.includes('验证码')) {
         document.getElementById('captcha-error').textContent = err.error
         document.getElementById('captcha-error').classList.remove('hidden')
@@ -203,6 +204,14 @@ async function startReading() {
       btn.textContent = '开始解读'
       return
     }
+
+    // ── 服务端返回 200，跳转解读页 ──
+    goStep(3)
+    document.getElementById('reading-question').textContent = `「${question}」`
+    document.getElementById('card-grid').innerHTML = ''
+    document.getElementById('reading-text').innerHTML = ''
+    document.getElementById('ai-reading').classList.add('hidden')
+    document.getElementById('typing-indicator').classList.remove('hidden')
 
     // --- SSE 流式读取 ---
     const reader = resp.body.getReader()
