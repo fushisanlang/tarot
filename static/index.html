@@ -67,6 +67,17 @@
           <span class="char-counter"><span id="char-count">0</span> / 200</span>
         </div>
       </div>
+
+      <!-- ─── 验证码 ─── -->
+      <div id="captcha-area" class="captcha-area">
+        <div class="captcha-row">
+          <span id="captcha-problem" class="captcha-problem"></span>
+          <input id="captcha-input" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" placeholder="输入答案" autocomplete="off">
+          <button id="captcha-refresh" class="btn-captcha-refresh" type="button" title="换一题">↻</button>
+        </div>
+        <div id="captcha-error" class="captcha-error hidden"></div>
+      </div>
+
       <div class="actions">
         <button id="prev-btn-2" class="btn btn-ghost" onclick="goStep(1)">← 重新选牌</button>
         <button id="draw-btn" class="btn btn-primary" onclick="startReading()">开始占卜</button>

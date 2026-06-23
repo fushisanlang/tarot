@@ -361,6 +361,79 @@ main {
   color: var(--text);
 }
 
+/* ─── 验证码 ──────────────────────────────────────────────── */
+
+.captcha-area {
+  max-width: 360px;
+  margin: 20px auto 0;
+}
+
+.captcha-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+
+.captcha-problem {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 1px;
+  min-width: 80px;
+  text-align: center;
+}
+
+#captcha-input {
+  width: 90px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  text-align: center;
+  transition: border-color var(--transition);
+}
+
+#captcha-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+#captcha-input::placeholder {
+  color: var(--text-muted);
+}
+
+.btn-captcha-refresh {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-dim);
+  width: 34px;
+  height: 34px;
+  font-size: 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.btn-captcha-refresh:hover {
+  border-color: var(--border-hover);
+  color: var(--text);
+}
+
+.captcha-error {
+  text-align: center;
+  font-size: 12px;
+  color: #e05454;
+  margin-top: 6px;
+}
+
 /* ─── 牌面展示（解读页） ─────────────────────────────────── */
 
 .card-grid {

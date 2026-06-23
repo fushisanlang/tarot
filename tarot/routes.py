@@ -7,6 +7,8 @@ POST /api/reading       — 执行占卜，SSE 流式输出
 import json
 import os
 import time
+import random
+import secrets
 from datetime import date
 from functools import wraps
 
@@ -14,7 +16,10 @@ import redis as redis_lib
 from dotenv import load_dotenv
 from flask import Blueprint, Response, jsonify, request, current_app
 
-from tarot.config import DAILY_LIMIT, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_DB
+from tarot.config import (
+    DAILY_LIMIT, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_DB,
+    CAPTCHA_TTL, CAPTCHA_LENGTH,
+)
 from tarot.ai_reader import AIReader, build_prompt
 from tarot.models import Reading, RateLimit, db
 from tarot.tarot_engine import TarotEngine
@@ -93,6 +98,36 @@ def _get_client_ip() -> str:
         return forwarded.split(",")[0].strip()
     return request.remote_addr or "127.0.0.1"
 
+
+# ── 验证码生成 ────────────────────────────────────────────────
+def _generate_captcha() -> tuple[str, str, int]:
+    """Return (token, problem, answer)."""
+    a = random.randint(1, 20)
+    b = random.randint(1, 20)
+    if random.choice([True, False]):
+        problem = f"{a} + {b} = ?"
+        answer = a + b
+    else:
+        if a < b:
+            a, b = b, a
+        problem = f"{a} - {b} = ?"
+        answer = a - b
+    token = secrets.token_hex(CAPTCHA_LENGTH)
+    return token, problem, answer
+
+
+@api.route("/captcha", methods=["GET"])
+def get_captcha():
+    """生成数学验证码，答案存 Redis（5 分钟有效）。"""
+    token, problem, answer = _generate_captcha()
+    try:
+        r = _get_redis()
+        r.setex(f"captcha:{token}", CAPTCHA_TTL, answer)
+    except redis_lib.RedisError:
+        # Redis 不可用时跳过验证码
+        return jsonify({"token": "", "problem": ""})
+    return jsonify({"token": token, "problem": problem})
+
 # ── 路由：获取所有牌阵 ────────────────────────────────────────
 @api.route("/spreads", methods=["GET"])
 def get_spreads():
@@ -117,6 +152,30 @@ def create_reading():
         return jsonify({"error": "question 不能为空"}), 400
     if len(question) > 500:
         return jsonify({"error": "问题长度不能超过 500 字"}), 400
+
+    # ── 验证码校验 ──
+    captcha_token = data.get("captcha_token", "").strip()
+    captcha_answer = data.get("captcha_answer", "")
+    if captcha_token:
+        try:
+            r = _get_redis()
+            key = f"captcha:{captcha_token}"
+            stored = r.get(key)
+            if stored is None:
+                return jsonify({"error": "验证码已过期，请刷新后重试"}), 400
+            r.delete(key)
+            if str(stored) != str(captcha_answer):
+                return jsonify({"error": "验证码错误"}), 400
+        except redis_lib.RedisError:
+            pass  # Redis 不可用时跳过
+    else:
+        # Redis 可用时必须验证
+        try:
+            r = _get_redis()
+            if r.ping():
+                return jsonify({"error": "请先完成验证"}), 400
+        except redis_lib.RedisError:
+            pass  # Redis 不可用时跳过
 
     # ── 抽牌 ──
     engine = TarotEngine()

@@ -4,6 +4,7 @@ let spreads = {}
 let selectedSpread = null
 let currentReadingId = null
 let cardImages = {}
+let captchaToken = null  // 当前验证码 token
 
 // ─── 初始化 ──────────────────────────────────────────────
 
@@ -73,6 +74,39 @@ function selectSpread(id) {
   goStep(2)
 }
 
+// ─── 验证码 ──────────────────────────────────────────────
+
+async function fetchCaptcha() {
+  const errEl = document.getElementById('captcha-error')
+  errEl.classList.add('hidden')
+  captchaToken = null
+  document.getElementById('captcha-problem').textContent = '加载中...'
+  document.getElementById('captcha-input').value = ''
+  try {
+    const resp = await fetch('/api/captcha')
+    const data = await resp.json()
+    if (data.token) {
+      captchaToken = data.token
+      document.getElementById('captcha-problem').textContent = data.problem
+    } else {
+      // Redis 不可用，跳过验证码
+      captchaToken = '__skip__'
+      document.getElementById('captcha-problem').textContent = ''
+    }
+  } catch (e) {
+    // 网络错误，跳过验证码
+    captchaToken = '__skip__'
+    document.getElementById('captcha-problem').textContent = ''
+  }
+}
+
+// 每次进入 step2 时刷新验证码
+const _origGoStep = goStep
+goStep = function(n) {
+  _origGoStep(n)
+  if (n === 2) fetchCaptcha()
+}
+
 // ─── 渲染牌面 ────────────────────────────────────────────
 
 function renderCards(cards) {
@@ -129,14 +163,26 @@ async function startReading() {
     const resp = await fetch('/api/reading', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ spread_id: selectedSpread, question }),
+      body: JSON.stringify({
+        spread_id: selectedSpread,
+        question,
+        captcha_token: captchaToken || '',
+        captcha_answer: document.getElementById('captcha-input').value.trim()
+      }),
     })
 
     if (!resp.ok) {
       const err = await resp.json().catch(() => ({ error: '请求失败' }))
-      document.getElementById('reading-text').textContent = err.error || '服务器错误，请稍后再试'
-      document.getElementById('ai-reading').classList.remove('hidden')
-      document.getElementById('typing-indicator').classList.add('hidden')
+      // 验证码错误 → 显示在验证码区域并刷新
+      if (err.error && err.error.includes('验证码')) {
+        document.getElementById('captcha-error').textContent = err.error
+        document.getElementById('captcha-error').classList.remove('hidden')
+        fetchCaptcha()
+      } else {
+        document.getElementById('reading-text').textContent = err.error || '服务器错误，请稍后再试'
+        document.getElementById('ai-reading').classList.remove('hidden')
+        document.getElementById('typing-indicator').classList.add('hidden')
+      }
       btn.disabled = false
       btn.textContent = '开始占卜'
       return
@@ -224,3 +270,7 @@ function resetAll() {
 document.getElementById('question-input').addEventListener('input', function () {
   document.getElementById('char-count').textContent = this.value.length
 })
+
+// ─── 验证码刷新 ──────────────────────────────────────────
+
+document.getElementById('captcha-refresh').addEventListener('click', fetchCaptcha)

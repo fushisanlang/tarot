@@ -25,6 +25,10 @@ REDIS_DB = int(os.getenv("REDIS_DB", "0"))
 # ── Rate Limiting ──────────────────────────────────────────────
 DAILY_LIMIT = int(os.getenv("DAILY_LIMIT", "10"))
 
+# ── CAPTCHA ────────────────────────────────────────────────────
+CAPTCHA_TTL = 300  # 验证码有效期 5 分钟
+CAPTCHA_LENGTH = int(os.getenv("CAPTCHA_LENGTH", "4"))  # token 长度
+
 # ── Flask ──────────────────────────────────────────────────────
 FLASK_HOST = os.getenv("FLASK_HOST", "0.0.0.0")
 FLASK_PORT = int(os.getenv("FLASK_PORT", "5002"))
