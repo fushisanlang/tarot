@@ -219,7 +219,6 @@ def create_reading():
                     {"role": "user", "content": user},
                 ],
                 stream=True,
-                stream_options={"include_usage": True},
                 max_tokens=AIReader._max_tokens_for_card_count(len(cards_data)),
                 temperature=0.7,
             )
@@ -230,9 +229,10 @@ def create_reading():
                     if content:
                         full_response_text += content
                         yield f"data: {json.dumps({'token': content}, ensure_ascii=False)}\n\n"
-                if hasattr(chunk, "usage") and chunk.usage:
-                    tokens_used = chunk.usage.total_tokens
             duration = time.time() - start_time
+            # 估算 token 消耗（中英文混合约 4 字符/token）
+            if full_response_text:
+                tokens_used = max(1, len(full_response_text) // 4)
         except Exception as e:
             current_app.logger.error(f"AI 解读出错: {e}")
             yield f"data: {json.dumps({'token': '（AI 解读暂不可用，请稍后再试）'}, ensure_ascii=False)}\n\n"
