@@ -125,12 +125,12 @@ class AIReader:
 
     @staticmethod
     def _max_tokens_for_card_count(n: int) -> int:
-        """三档 max_tokens：小牌阵(1-3张)=800, 中(4-7张)=1200, 大(8+)=2000"""
+        """三档 max_tokens：小牌阵(1-3张)=2500, 中(4-7张)=3500, 大(8+)=5000"""
         if n <= 3:
-            return 800
+            return 2500
         elif n <= 7:
-            return 1200
-        return 2000
+            return 3500
+        return 5000
 
     # ── 解读 ──────────────────────────────────────────────
 
