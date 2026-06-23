@@ -264,6 +264,13 @@ async function startReading() {
               textEl.innerHTML = marked.parse(textEl.dataset.mdBuffer)
             }
           }
+
+          // 当日剩余次数
+          if (d.remaining !== undefined) {
+            const badge = document.getElementById('quota-badge')
+            badge.textContent = `今日剩余 ${d.remaining} 次`
+            badge.classList.remove('hidden')
+          }
         } catch (e) {
           // partial JSON — ignore
         }
@@ -313,3 +320,7 @@ document.getElementById('captcha-refresh').addEventListener('click', function ()
   document.getElementById('captcha-error').classList.add('hidden')
   fetchCaptcha()
 })
+
+// ─── 品牌点击回首页 ────────────────────────────────────
+
+document.getElementById('brand-logo').addEventListener('click', resetAll)

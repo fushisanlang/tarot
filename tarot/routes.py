@@ -263,6 +263,18 @@ def create_reading():
                 pass
 
         yield f"data: {json.dumps({'done': True, 'reading_id': reading_id}, ensure_ascii=False)}\n\n"
+        # 发送当日剩余次数（仅当 Redis 可用）
+        _remaining = None
+        try:
+            _r = _get_redis()
+            _key = f"rate_limit:{ip}:{date.today().isoformat()}"
+            _cur = _r.get(_key)
+            if _cur is not None:
+                _remaining = max(0, DAILY_LIMIT - int(_cur))
+        except redis_lib.RedisError:
+            pass
+        if _remaining is not None:
+            yield f"data: {json.dumps({'remaining': _remaining}, ensure_ascii=False)}\n\n"
 
     return Response(
         generate(),

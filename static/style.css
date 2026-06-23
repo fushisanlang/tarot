@@ -143,6 +143,16 @@ header {
   background: var(--accent);
 }
 
+.quota-badge {
+  font-size: 11px;
+  color: var(--accent);
+  background: var(--accent-glow);
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+
 /* ─── 主容器 ────────────────────────────────────────────── */
 
 main {
