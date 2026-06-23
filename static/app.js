@@ -132,6 +132,15 @@ function renderCards(cards) {
 
     grid.appendChild(div)
   }
+
+  // 检测溢出：超过容器宽度则切为左对齐可滚动
+  requestAnimationFrame(() => {
+    if (grid.scrollWidth > grid.clientWidth) {
+      grid.classList.add('scrollable')
+    } else {
+      grid.classList.remove('scrollable')
+    }
+  })
 }
 
 // ─── 开始占卜（流式） ─────────────────────────────────────

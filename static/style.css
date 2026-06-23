@@ -446,12 +446,12 @@ main {
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
   margin-bottom: 28px;
+  justify-content: center;
 }
 
-/* 1-2 张牌居中显示 */
-.card-grid:has(> :only-child),
-.card-grid:has(> :nth-child(2):last-child) {
-  justify-content: center;
+/* 牌面超出容器宽度时切换为左对齐 + 滚动 */
+.card-grid.scrollable {
+  justify-content: flex-start;
 }
 
 .card-item {
