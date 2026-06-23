@@ -1,10 +1,10 @@
-FROM python:3.14-slim
+FROM python:3.10-slim
 
 WORKDIR /app
 
 # Python 依赖
 COPY requirements.txt .
-RUN pip install --no-cache-dir gunicorn -r requirements.txt
+RUN pip install  -i https://pypi.tuna.tsinghua.edu.cn/simple   --no-cache-dir gunicorn -r requirements.txt
 
 # 项目代码
 COPY . .
