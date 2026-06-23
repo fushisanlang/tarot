@@ -87,6 +87,7 @@ function selectSpread(id) {
 
 async function fetchCaptcha() {
   captchaToken = null
+  _captchaClearing = true
   document.getElementById('captcha-problem').textContent = '加载中...'
   document.getElementById('captcha-input').value = ''
   try {
@@ -298,9 +299,14 @@ document.getElementById('question-input').addEventListener('input', function () 
 
 // ─── 验证码 ──────────────────────────────────────────────
 
+let _captchaClearing = false
+
 // 用户重新输入时清除错误提示
 document.getElementById('captcha-input').addEventListener('input', function () {
-  document.getElementById('captcha-error').classList.add('hidden')
+  if (!_captchaClearing) {
+    document.getElementById('captcha-error').classList.add('hidden')
+  }
+  _captchaClearing = false
 })
 
 document.getElementById('captcha-refresh').addEventListener('click', function () {
