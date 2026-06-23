@@ -196,6 +196,7 @@ def create_reading():
         duration = None
         full_response_text = ""
         reading_id = None
+        tokens_used = None
         start_time = time.time()
 
         # 第一步：立即发送牌面数据（先展示卡片，再慢慢读心）
@@ -218,6 +219,7 @@ def create_reading():
                     {"role": "user", "content": user},
                 ],
                 stream=True,
+                stream_options={"include_usage": True},
                 max_tokens=AIReader._max_tokens_for_card_count(len(cards_data)),
                 temperature=0.7,
             )
@@ -228,6 +230,8 @@ def create_reading():
                     if content:
                         full_response_text += content
                         yield f"data: {json.dumps({'token': content}, ensure_ascii=False)}\n\n"
+                if hasattr(chunk, "usage") and chunk.usage:
+                    tokens_used = chunk.usage.total_tokens
             duration = time.time() - start_time
         except Exception as e:
             current_app.logger.error(f"AI 解读出错: {e}")
@@ -242,7 +246,7 @@ def create_reading():
                 reading = Reading(
                     ip=ip, spread_id=spread_id, spread_name=spread_name,
                     question=question, cards=cards_data, response=full_response_text or None,
-                    tokens_used=None, duration=round(duration, 2) if duration else None,
+                    tokens_used=tokens_used, duration=round(duration, 2) if duration else None,
                 )
                 db.session.add(reading)
                 db.session.commit()
