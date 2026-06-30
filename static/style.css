@@ -670,6 +670,21 @@ footer {
   color: var(--text-muted);
   letter-spacing: 2px;
   border-top: 1px solid var(--border);
+  line-height: 1.8;
+}
+
+footer p {
+  margin: 0;
+}
+
+footer a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+footer a:hover {
+  color: var(--accent);
 }
 
 /* ─── 响应式 ──────────────────────────────────────────────── */

@@ -352,7 +352,7 @@ async function shareReading() {
   const btn = document.getElementById('share-btn')
   const originalText = btn.textContent
   btn.disabled = true
-  btn.textContent = '生成中...'
+  btn.textContent = '分享中...'
 
   try {
     // 显示二维码
