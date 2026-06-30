@@ -359,18 +359,22 @@ async function shareReading() {
     const qrContainer = document.getElementById('qr-container')
     qrContainer.classList.remove('hidden')
 
+    // 隐藏按钮，不要截进去
+    const actionsDiv = document.querySelector('.actions')
+    actionsDiv.style.display = 'none'
+
     // 截取 step3 内容（section）
     const element = document.getElementById('step3')
 
     const canvas = await html2canvas(element, {
-      backgroundColor: '#0d0d0d',  // 暗色背景匹配样式
-      scale: 2,                    // 2x 分辨率质量更好
-      useCORS: true,
       allowTaint: true,
+      useCORS: true,
       logging: false,
+      scale: 2,
     })
 
-    // 隐藏二维码
+    // 恢复按钮显示
+    actionsDiv.style.display = ''
     qrContainer.classList.add('hidden')
 
     // 生成文件名 — 当前日期 + 随机 id
@@ -394,6 +398,7 @@ async function shareReading() {
     }, 2000)
   } catch (err) {
     console.error('截图失败:', err)
+    document.querySelector('.actions').style.display = ''
     document.getElementById('qr-container').classList.add('hidden')
     btn.textContent = '✗ 失败，请重试'
     btn.disabled = false
