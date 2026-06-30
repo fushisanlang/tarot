@@ -114,7 +114,14 @@
         </div>
       </div>
 
+      <!-- ─── 截图用的二维码（平时隐藏） ─── -->
+      <div id="qr-container" class="qr-container hidden">
+        <div class="qr-label">知我 · 塔罗</div>
+        <img src="/static/qr-code.png" alt="扫码进入" class="qr-code-img">
+      </div>
+
       <div class="actions">
+        <button id="share-btn" class="btn btn-ghost" onclick="shareReading()">✧ 保存截图</button>
         <button id="new-reading-btn" class="btn btn-primary" onclick="resetAll()">再来一次</button>
       </div>
     </section>
@@ -127,6 +134,7 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="/static/app.js"></script>
 </body>
 </html>

@@ -345,3 +345,60 @@ document.getElementById('captcha-refresh').addEventListener('click', function ()
 // ─── 品牌点击回首页 ────────────────────────────────────
 
 document.getElementById('brand-logo').addEventListener('click', resetAll)
+
+// ─── 保存截图（分享功能） ────────────────────────────────────
+
+async function shareReading() {
+  const btn = document.getElementById('share-btn')
+  const originalText = btn.textContent
+  btn.disabled = true
+  btn.textContent = '生成中...'
+
+  try {
+    // 显示二维码
+    const qrContainer = document.getElementById('qr-container')
+    qrContainer.classList.remove('hidden')
+
+    // 截取 step3 内容（section）
+    const element = document.getElementById('step3')
+
+    const canvas = await html2canvas(element, {
+      backgroundColor: '#0d0d0d',  // 暗色背景匹配样式
+      scale: 2,                    // 2x 分辨率质量更好
+      useCORS: true,
+      allowTaint: true,
+      logging: false,
+    })
+
+    // 隐藏二维码
+    qrContainer.classList.add('hidden')
+
+    // 生成文件名 — 当前日期 + 随机 id
+    const now = new Date()
+    const dateStr = now.toISOString().slice(0, 10)
+    const randId = Math.random().toString(36).slice(2, 8)
+    const filename = `tarot-${dateStr}-${randId}.png`
+
+    // 下载
+    const link = document.createElement('a')
+    link.href = canvas.toDataURL('image/png')
+    link.download = filename
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+
+    btn.textContent = '✓ 已保存'
+    setTimeout(() => {
+      btn.textContent = originalText
+      btn.disabled = false
+    }, 2000)
+  } catch (err) {
+    console.error('截图失败:', err)
+    document.getElementById('qr-container').classList.add('hidden')
+    btn.textContent = '✗ 失败，请重试'
+    btn.disabled = false
+    setTimeout(() => {
+      btn.textContent = originalText
+    }, 2000)
+  }
+}
