@@ -371,6 +371,16 @@ async function shareReading() {
       useCORS: true,
       logging: false,
       scale: 2,
+      backgroundColor: '#0c0a14',  // 页面主背景色（--bg），避免默认白底
+      onclone: (clonedDoc) => {
+        // 克隆体会重放 fadeUp 动画导致截图半透明发灰，这里强制定格到完成态
+        const sec = clonedDoc.getElementById('step3')
+        if (sec) {
+          sec.style.animation = 'none'
+          sec.style.opacity = '1'
+          sec.style.transform = 'none'
+        }
+      },
     })
 
     // 恢复按钮显示
